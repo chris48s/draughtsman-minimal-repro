@@ -1,0 +1,27 @@
+sudo: required
+dist: xenial
+language: python
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - gcc-5
+      - g++-5
+script:
+  - sudo unlink /usr/bin/g++ && sudo ln -s /usr/bin/g++-5 /usr/bin/g++
+  - wget https://github.com/apiaryio/drafter/releases/download/v4.1.0/drafter-4.1.0.tar.gz
+  - tar xvzf drafter-4.1.0.tar.gz
+  - cd drafter-4.1.0
+  - mkdir build
+  - cd build
+  - cmake ..
+  - make
+  - sudo make install
+  - sudo ln -s /usr/local/lib/libdrafter.so /usr/lib/libdrafter.so
+  - cd ../..
+  - rm -rf drafter-4.1.0/
+  - rm drafter-4.1.0.tar.gz
+  - pip install --upgrade pip
+  - pip install git+git://github.com/kylef/draughtsman.git@master
+  - python parse.py
